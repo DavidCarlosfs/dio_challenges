@@ -37,7 +37,7 @@ class ContaBancaria():
             self.numero_conta += 1
             conta = {"agencia": self.AGENCIA, "numero_conta": self.numero_conta, "usuario_cpf": cpf}
             self.contas.append(conta)
-            self.usuario_cpf[cpf].append(self.numero_conta)  # Adiciona o número da conta à lista de contas do CPF
+            self.usuario_cpf[cpf].append(conta)
             print(f"Conta criada com sucesso!")
         else:
             print("Usuário não encontrado, por favor, retorne ao menu e informe um CPF já cadastrado.")
@@ -92,14 +92,16 @@ class ContaBancaria():
     def encontrar_contas_por_cpf(self, cpf: str):
         if cpf not in self.usuario_cpf:
             print("CPF não encontrado!")
-        elif not self.usuario_cpf[cpf]:
-            print("Não há contas vinculadas ao CPF informado!")
+            return
+    
+
         else:
-            contas_vinculadas = [conta for conta in self.contas if conta["usuario_cpf"] == cpf]
+            contas_vinculadas = self.usuario_cpf[cpf]
             if contas_vinculadas:
                 print(f"Contas vinculadas ao CPF {cpf}:")
                 for conta in contas_vinculadas:
                     print(f"Agência: {conta['agencia']}, Número da Conta: {conta['numero_conta']}")
+            
             else:
                 print("Não há contas vinculadas ao CPF informado!")
 
@@ -109,16 +111,19 @@ class ContaBancaria():
             return
         
         # Verifica se o CPF tem contas associadas
-        if numero_conta not in self.usuario_cpf[cpf]:
+        contas_associadas = self.usuario_cpf[cpf]
+
+        if not contas_associadas:
             print("Conta não encontrada para o CPF informado.")
             return
         
+
         # Remove a conta da lista de contas
-        conta_a_deletar = next((conta for conta in self.contas if conta["numero_conta"] == numero_conta and conta["usuario_cpf"] == cpf), None)
+        conta_a_deletar = next((conta for conta in contas_associadas if conta["numero_conta"] == numero_conta), None)
         
         if conta_a_deletar:
             self.contas.remove(conta_a_deletar)
-            self.usuario_cpf[cpf].remove(numero_conta)  # Remove o número da conta da lista de contas do CPF
+            self.usuario_cpf[cpf].remove(conta_a_deletar)  # Remove o número da conta da lista de contas do CPF
             print(f"Conta número {numero_conta} vinculada ao CPF {cpf} foi deletada com sucesso!")
         else:
             print("Conta não encontrada para o CPF informado.")

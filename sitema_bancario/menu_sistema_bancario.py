@@ -35,7 +35,7 @@ while menu != 0:
 
     elif menu == 4:
         cpf_deletar = input("Digite o CPF da conta que deseja deletar: ")
-        numero_conta = input("Digite o número da conta que deseja deletar: ")
+        numero_conta = int(input("Digite o número da conta que deseja deletar: "))
         conta.deletar_conta(cpf=cpf_deletar, numero_conta=numero_conta)
 
     elif menu == 5:
